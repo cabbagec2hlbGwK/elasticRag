@@ -55,6 +55,8 @@ def ingestList(files):
         data = extractTextFromPdfPage(os.path.join("full_pdf_dataset",file))
         insertData(data)
         print(f"data inserted{file}")
+        with open('state.txt','a') as f:
+            f.write(f"\n{file}--done")
         
 
 def splitList(input_list, n):
