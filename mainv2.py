@@ -38,6 +38,7 @@ def ingestList(files, indexName, esHost, apiKey):
         data = extractTextFromPdfPage(os.path.join("full_pdf_dataset", file))
         ingestData(es, indexName, data)
         print(f"data inserted {file}")
+    del es
         
     # Write completed files at once to reduce file I/O
     with open('state.txt', 'a') as f:
