@@ -154,6 +154,7 @@ def extract_headings(pdf_path):
 def main():
     files = os.listdir("full_pdf_dataset")
     ingestList([files[1]])
+    input()
     n = int(len(files)*.05)
     print(f"total process: {n}")
     processes = []

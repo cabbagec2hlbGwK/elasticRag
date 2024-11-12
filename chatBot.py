@@ -37,7 +37,7 @@ def get_elasticsearch_results(query):
                             }
                         },
                         "inner_hits": {
-                            "size": 2,
+                            "size": 5,
                             "name": "dc-ecinf-index.text",
                             "_source": [
                                 "text.inference.chunks.text"
@@ -142,10 +142,14 @@ def main():
             {"role": "system", "content":systemPrompt},
            # {"role": "user", "content": question},
         ]
+    sessionGpt = [
+           # {"role": "user", "content": question},
+        ]
     while True:
         contextLength = len(str(session))
         print("-"*100)
         print(f"Current context length {contextLength}")
+        print(f"Current context length GPT {len(str(sessionGpt))}")
         if contextLength >= 30000:
             print("Context Overflow.....")
             session = [
@@ -154,6 +158,7 @@ def main():
                 ]
             print("Context has been reset")
         question = input("*>> Enter the question: ")
+        print()
         contextPrompt = create_openai_prompt(question, "")
         index = len(session)
         contextPrompt+= additionInstruction
@@ -178,8 +183,15 @@ def main():
             contextGlobal = context
         session.append({"role": "assistant", "content": str(result)})
         session[index]["content"] = str(session[index]["content"]).replace(getContext(contextGlobal),"")
+        sessionGpt.append({"role": "user", "content": question})
+        resultGpt = generate_openai_completion(sessionGpt)
+        session.append({"role": "assistant", "content": str(resultGpt)})
+        #print(getContext(contextGlobal))
         fmtData = Markdown(result)
+        fmtDataGpt = Markdown(resultGpt)
         console.print(fmtData)
+        print("---GPT---")
+        console.print(fmtDataGpt)
 
 
 
